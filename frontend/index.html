@@ -6,33 +6,53 @@
 <title>日切放行</title>
 <script src="/static/vue.global.prod.js"></script>
 <style>
-  :root{--bg:#0b1220;--panel:#121a2b;--line:#243049;--text:#e8eefc;--muted:#93a0b8;--ok:#3ddc97;--bad:#ff6b6b;--accent:#4cc9f0}
+  :root{--bg:#0b1220;--panel:#121a2b;--line:#243049;--text:#e8eefc;--muted:#93a0b8;--ok:#3ddc97;--bad:#ff6b6b;--warn:#ffc857;--accent:#4cc9f0}
   *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
   .top{display:flex;align-items:center;gap:18px;padding:14px 20px;border-bottom:1px solid var(--line);background:#0e1626}
   .brand{font-weight:700;letter-spacing:.08em;font-size:18px}
   .brand small{display:block;color:var(--muted);font-weight:400;font-size:11px;letter-spacing:.02em;margin-top:2px}
-  .tabs{display:flex;gap:6px;flex:1}
+  .tabs{display:flex;gap:6px;flex:1;flex-wrap:wrap}
   .tabs button{background:transparent;border:1px solid transparent;color:var(--muted);padding:8px 12px;border-radius:999px;cursor:pointer}
   .tabs button.on{color:var(--text);border-color:var(--line);background:#18233a}
   .user{color:var(--muted);font-size:13px}
   .ghost{background:#18233a;border:1px solid var(--line);color:var(--text);padding:7px 10px;border-radius:8px;cursor:pointer}
+  .ghost.sm{padding:4px 8px;font-size:12px}
   main{padding:18px 20px 28px}
-  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
   h2{margin:0 0 10px;font-size:15px;color:#c9d4ea}
+  h3{margin:12px 0 6px;font-size:13px;color:var(--muted);font-weight:600}
   table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+  th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
   th{color:var(--muted);font-weight:600}
-  input,select{width:100%;background:#0b1220;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;margin:4px 0 10px}
+  input,select,textarea{width:100%;background:#0b1220;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;margin:4px 0 10px;font-family:inherit;font-size:13px}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .primary{background:var(--accent);color:#041018;border:0;padding:9px 12px;border-radius:8px;font-weight:700;cursor:pointer}
+  .primary[disabled]{opacity:.45;cursor:not-allowed}
   .mono{font-family:Consolas,"Courier New",monospace}
-  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:#1b2a22;color:var(--ok)}
-  .tag.bad{background:#2a1518;color:var(--bad)}
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:#1b2a22;color:var(--ok);white-space:nowrap}
+  .tag.bad{background:#2a1518;color:var(--bad)} .tag.warn{background:#2a2312;color:var(--warn)} .tag.mut{background:#1a2233;color:var(--muted)}
   .login{max-width:400px;margin:12vh auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
-  .err{color:var(--bad);min-height:18px;font-size:13px}
-  .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-  .kpi .panel{padding:12px}.kpi b{display:block;font-size:22px;margin-top:4px}
+  .err{color:var(--bad);min-height:18px;font-size:13px;white-space:pre-wrap}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  .kpi .panel{padding:12px} .kpi b{display:block;font-size:22px;margin-top:4px}
+  .picker{max-height:210px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#0b1220;margin-bottom:10px}
+  .pick{display:flex;align-items:center;gap:8px;padding:5px 2px;font-size:13px;border-bottom:1px dashed #1c2536}
+  .pick:last-child{border-bottom:0}
+  .pick input{width:auto;margin:0}
+  .pick .c{flex:1}
+  .pick small{color:var(--muted)}
+  .caliber{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .caliber label{border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;background:#0b1220;font-size:13px}
+  .caliber label.on{border-color:var(--accent);background:#10243a}
+  .caliber input{width:auto;margin:0 6px 0 0}
+  .caliber small{display:block;color:var(--muted);margin-top:4px;line-height:1.4}
+  .note{font-size:12px;color:var(--muted);line-height:1.6}
+  .side{border-left:1px solid var(--line);padding-left:12px}
+  .chosen{border:1px solid #2b3d2f;background:#15241b;border-radius:10px;padding:10px;font-size:13px;margin-bottom:10px;line-height:1.5}
+  .chosen.locked{border-color:#3a3320;background:#221f15}
+  .list{max-height:320px;overflow:auto}
 </style>
 </head>
 <body>
@@ -55,12 +75,21 @@ createApp({
     const token=ref(localStorage.getItem('slicegate_token')||'');
     const user=ref(localStorage.getItem('slicegate_user')||'');
     const username=ref('admin'), password=ref('123456'), err=ref(''), tab=ref(0), actionErr=ref('');
-    const slices=ref([]), releases=ref([]), watermarks=ref([]);
+    const slices=ref([]), releases=ref([]), watermarks=ref([]), consumers=ref([]), batches=ref([]), incidents=ref([]), wmSummary=ref([]), policy=ref(null);
     const form=ref({slice_no:'SL-2026-11-03-east',biz_date:'2026-11-03',partition_key:'east',row_count:1000,expected_count:1000});
-    const releaseSliceId=ref(1), consumer=ref('ads_order');
-    const nav=['切片登记','完整度裁决','下游放行','消费水位'];
+    const newConsumer=ref({code:'',name:'',contact:''});
+    const releaseSliceId=ref(1), selectedConsumers=ref([]), caliber=ref('甲'), releaseNote=ref('');
+    const detailBatch=ref(null), detailItems=ref([]);
+    const nav=['切片登记','完整度裁决','下游放行','消费水位','多消费提交簿'];
     const completeCnt=computed(()=>slices.value.filter(s=>s.completeness==='完整').length);
     const openCnt=computed(()=>slices.value.filter(s=>s.release_status!=='已放行').length);
+    const activeConsumers=computed(()=>consumers.value.filter(c=>c.status==='启用'));
+    const currentSlice=computed(()=>slices.value.find(s=>s.id===releaseSliceId.value)||null);
+    const dayChoice=computed(()=>policy.value&&policy.value.chosen);
+    const caliberLocked=computed(()=>!!dayChoice.value);
+    const effectiveCaliber=computed(()=>dayChoice.value?dayChoice.value.caliber:caliber.value);
+    const canSubmit=computed(()=>selectedConsumers.value.length>0);
+
     function auth(){return {Authorization:'Bearer '+token.value,'Content-Type':'application/json'};}
     async function login(){
       err.value='';
@@ -77,21 +106,71 @@ createApp({
       if(r.status===401){ logout(); return null; }
       return j;
     }
+    async function loadPolicy(){
+      if(!currentSlice.value) { policy.value=null; return; }
+      const p=await loadJson('/api/release-policy?biz_date='+encodeURIComponent(currentSlice.value.biz_date));
+      if(p===null) return;
+      policy.value=p;
+      // 口径与消费方可选集合全部取自策略接口（与目录、提交簿同源）。
+      if(p.chosen) caliber.value=p.chosen.caliber;
+      const allowed=new Set((p.consumers||[]).map(c=>c.code));
+      selectedConsumers.value=selectedConsumers.value.filter(c=>allowed.has(c));
+    }
     async function refresh(){
       if(!token.value) return;
       const s=await loadJson('/api/slices'); if(s===null) return;
       slices.value=Array.isArray(s.items)?s.items:[];
+      if(slices.value.length && !slices.value.find(x=>x.id===releaseSliceId.value)) releaseSliceId.value=slices.value[0].id;
+      const c=await loadJson('/api/consumers'); if(c===null) return;
+      consumers.value=Array.isArray(c.items)?c.items:[];
       const rel=await loadJson('/api/releases'); if(rel===null) return;
       releases.value=Array.isArray(rel.items)?rel.items:[];
       const w=await loadJson('/api/watermarks'); if(w===null) return;
       watermarks.value=Array.isArray(w.items)?w.items:[];
-      if(slices.value.length) releaseSliceId.value=slices.value[0].id;
+      const ws=await loadJson('/api/watermarks/summary'); if(ws===null) return;
+      wmSummary.value=Array.isArray(ws.items)?ws.items:[];
+      const b=await loadJson('/api/release-batches?limit=40'); if(b===null) return;
+      batches.value=Array.isArray(b.items)?b.items:[];
+      const inc=await loadJson('/api/release-incidents?limit=60'); if(inc===null) return;
+      incidents.value=Array.isArray(inc.items)?inc.items:[];
+      await loadPolicy();
+      if(batches.value.length) await showBatch(batches.value[0].batch_no); else {detailBatch.value=null;detailItems.value=[];}
+    }
+    async function showBatch(no){
+      const r=await loadJson('/api/release-batches/'+encodeURIComponent(no));
+      if(!r||!r.item) return;
+      detailBatch.value=r.item; detailItems.value=r.item.items||[];
     }
     async function createSlice(){actionErr.value='';const r=await fetch('/api/slices',{method:'POST',headers:auth(),body:JSON.stringify(form.value)});const j=await r.json();if(!r.ok)actionErr.value=j.detail||'失败';await refresh();}
     async function evaluate(id){await fetch('/api/slices/'+id+'/evaluate',{method:'POST',headers:auth()});await refresh();}
-    async function doRelease(){actionErr.value='';const r=await fetch('/api/slices/'+releaseSliceId.value+'/release',{method:'POST',headers:auth(),body:JSON.stringify({consumer:consumer.value})});const j=await r.json();if(!r.ok)actionErr.value=j.detail||'放行失败';await refresh();}
+    async function addConsumer(){
+      actionErr.value='';
+      if(!newConsumer.value.code.trim()){actionErr.value='消费方编码不能为空';return;}
+      const r=await fetch('/api/consumers',{method:'POST',headers:auth(),body:JSON.stringify({code:newConsumer.value.code,name:newConsumer.value.name,contact:newConsumer.value.contact,status:'启用',sort_order:100})});
+      const j=await r.json(); if(!r.ok){actionErr.value=j.detail||'登记失败';return;}
+      newConsumer.value={code:'',name:'',contact:''}; await refresh();
+    }
+    async function toggleConsumer(c){
+      const r=await fetch('/api/consumers/'+encodeURIComponent(c.code),{method:'PATCH',headers:auth(),body:JSON.stringify({code:c.code,name:c.name,contact:c.contact,status:c.status==='启用'?'停用':'启用',sort_order:c.sort_order})});
+      const j=await r.json(); if(!r.ok) actionErr.value=j.detail||'更新失败';
+      await refresh();
+    }
+    async function doRelease(){
+      actionErr.value='';
+      if(!selectedConsumers.value.length){actionErr.value='请先选定消费方清单';return;}
+      const body={consumers:selectedConsumers.value.slice(),caliber:effectiveCaliber.value,note:releaseNote.value};
+      const r=await fetch('/api/slices/'+releaseSliceId.value+'/multi-release',{method:'POST',headers:auth(),body:JSON.stringify(body)});
+      const j=await r.json().catch(()=>({})); await refresh();
+      if(!r.ok){actionErr.value=(j.detail||'放行失败')+(j.batch_no?'\n批次：'+j.batch_no:'');}
+      else if(j.status!=='全部成功'){actionErr.value='本批未全部成功：'+j.status+'（成功 '+j.success_count+' / 失败 '+j.fail_count+'），失败方已单列';}
+      if(j.batch) await showBatch(j.batch.batch_no);
+    }
+    async function onSliceChange(){ await loadPolicy(); }
     onMounted(()=>{if(token.value)refresh();});
-    return {token,user,username,password,err,tab,nav,slices,releases,watermarks,form,releaseSliceId,consumer,actionErr,completeCnt,openCnt,login,logout,createSlice,evaluate,doRelease};
+    return {token,user,username,password,err,tab,nav,slices,releases,watermarks,consumers,batches,incidents,wmSummary,policy,
+            form,newConsumer,releaseSliceId,selectedConsumers,caliber,releaseNote,detailBatch,detailItems,
+            completeCnt,openCnt,activeConsumers,currentSlice,dayChoice,caliberLocked,effectiveCaliber,canSubmit,
+            login,logout,refresh,showBatch,createSlice,evaluate,addConsumer,toggleConsumer,doRelease,onSliceChange};
   },
   template:`
   <div v-if="!token" class="login">
@@ -101,7 +180,7 @@ createApp({
   </div>
   <div v-if="token">
     <div class="top">
-      <div class="brand">日切放行<small>切片 → 完整度 → 放行 → 水位</small></div>
+      <div class="brand">日切放行<small>切片 → 完整度 → 多消费放行 → 各自水位</small></div>
       <div class="tabs"><button v-for="(n,i) in nav" :key="n" :class="{on:tab===i}" @click="tab=i">{{n}}</button></div>
       <div class="user">{{user}}</div><button class="ghost" @click="logout">退出</button>
     </div>
@@ -110,16 +189,19 @@ createApp({
         <div class="panel">切片总数<b class="mono">{{slices.length}}</b></div>
         <div class="panel">已完整<b class="mono">{{completeCnt}}</b></div>
         <div class="panel">未放行<b class="mono">{{openCnt}}</b></div>
+        <div class="panel">消费方<b class="mono">{{consumers.length}}</b><span class="note">启用 {{activeConsumers.length}}</span></div>
       </div>
+
       <div v-show="tab===0" class="grid">
         <div class="panel">
           <h2>在途切片</h2>
-          <table><thead><tr><th>切片号</th><th>日/区</th><th>实收</th><th>完整度</th><th></th></tr></thead>
+          <table><thead><tr><th>切片号</th><th>日/区</th><th>实收</th><th>完整度</th><th>放行态</th><th></th></tr></thead>
           <tbody><tr v-for="s in slices" :key="s.id">
             <td class="mono">{{s.slice_no}}</td><td>{{s.biz_date}} / {{s.partition_key}}</td>
             <td class="mono">{{s.row_count}}/{{s.expected_count}}</td>
             <td><span class="tag" :class="{bad:s.completeness!=='完整'}">{{s.completeness}}</span></td>
-            <td><button class="ghost" @click="evaluate(s.id)">重裁</button></td>
+            <td><span class="tag" :class="{mut:s.release_status!=='已放行',warn:s.release_status==='部分放行'}">{{s.release_status}}</span></td>
+            <td><button class="ghost sm" @click="evaluate(s.id)">重裁</button></td>
           </tr></tbody></table>
         </div>
         <div class="panel">
@@ -131,6 +213,7 @@ createApp({
           <div class="err">{{actionErr}}</div>
         </div>
       </div>
+
       <div v-show="tab===1" class="panel">
         <h2>完整度裁决</h2>
         <table><thead><tr><th>切片</th><th>缺口</th><th>结论</th><th>放行态</th></tr></thead>
@@ -139,24 +222,149 @@ createApp({
           <td>{{s.completeness}}</td><td>{{s.release_status}}</td>
         </tr></tbody></table>
       </div>
+
       <div v-show="tab===2" class="grid">
-        <div class="panel">
-          <h2>申请放行</h2>
-          <label>切片</label><select v-model.number="releaseSliceId"><option v-for="s in slices" :value="s.id">{{s.slice_no}}（{{s.completeness}}）</option></select>
-          <label>下游</label><input v-model="consumer"/>
-          <button class="primary" @click="doRelease">放行</button>
-          <div class="err">{{actionErr}}</div>
+        <div>
+          <div class="panel">
+            <h2>申请多消费放行</h2>
+            <label>切片</label>
+            <select v-model.number="releaseSliceId" @change="onSliceChange">
+              <option v-for="s in slices" :value="s.id">{{s.slice_no}}（{{s.completeness}} / {{s.release_status}}）</option>
+            </select>
+            <label>提交口径（当日一经选定即锁定）</label>
+            <div class="caliber">
+              <label v-for="m in (policy?policy.calibers:[]) " :key="m.code" :class="{on:effectiveCaliber===m.code}">
+                <input type="radio" name="caliber" :value="m.code" v-model="caliber" :disabled="caliberLocked"/> {{m.label}}
+                <small>{{m.summary}}；{{m.failure_rule}}</small>
+              </label>
+            </div>
+            <label>消费方清单（取自消费方目录，逐方独立推进水位）</label>
+            <div class="picker">
+              <div class="pick" v-for="c in consumers" :key="c.code">
+                <input type="checkbox" :value="c.code" v-model="selectedConsumers" :disabled="c.status!=='启用'"/>
+                <span class="c">{{c.name}} <span class="mono">{{c.code}}</span></span>
+                <small v-if="c.status!=='启用'">已停用</small>
+              </div>
+            </div>
+            <label>备注</label><input v-model="releaseNote" placeholder="选填，写入提交簿"/>
+            <button class="primary" :disabled="!canSubmit" @click="doRelease">按 {{effectiveCaliber}} 口径提交</button>
+            <div class="err">{{actionErr}}</div>
+          </div>
+          <div class="panel">
+            <h2>消费方目录</h2>
+            <table><thead><tr><th>编码</th><th>名称</th><th>状态</th><th></th></tr></thead>
+            <tbody><tr v-for="c in consumers" :key="'k'+c.code">
+              <td class="mono">{{c.code}}</td><td>{{c.name}}</td>
+              <td><span class="tag" :class="{bad:c.status!=='启用'}">{{c.status}}</span></td>
+              <td><button class="ghost sm" @click="toggleConsumer(c)">{{c.status==='启用'?'停用':'启用'}}</button></td>
+            </tr></tbody></table>
+            <h3>登记消费方</h3>
+            <div class="row"><div><label>编码</label><input v-model="newConsumer.code"/></div><div><label>名称</label><input v-model="newConsumer.name"/></div></div>
+            <label>联系人</label><input v-model="newConsumer.contact"/>
+            <button class="ghost" @click="addConsumer">写入目录</button>
+          </div>
         </div>
-        <div class="panel">
-          <h2>放行流水</h2>
-          <table><thead><tr><th>切片</th><th>下游</th><th>结果</th><th>时间</th></tr></thead>
-          <tbody><tr v-for="r in releases" :key="r.id"><td class="mono">{{r.slice_no}}</td><td>{{r.consumer}}</td><td>{{r.status}}</td><td class="mono">{{r.created_at}}</td></tr></tbody></table>
+        <div>
+          <div class="panel">
+            <h2>策略旁注（与目录/提交簿同源）</h2>
+            <div class="chosen" :class="{locked:caliberLocked}">
+              <div v-if="dayChoice"><b>{{currentSlice?currentSlice.biz_date:''}} 当日口径：{{dayChoice.caliber}}</b><br/>提交簿 {{dayChoice.batch_no}} · 选定于 {{dayChoice.chosen_at}} · 当日禁止改口</div>
+              <div v-else><b>当日尚未选口径</b><br/>首次多消费提交将把口径写入提交簿，当日随之锁定。</div>
+            </div>
+            <div class="note" v-if="policy">
+              <div>· {{policy.rules.daily_lock}}</div>
+              <div>· {{policy.rules.deviation}}</div>
+              <div>· {{policy.rules.contention}}</div>
+              <div>· {{policy.rules.watermark}}</div>
+              <div>· {{policy.rules.partial}}</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>放行详情 <span class="note" v-if="detailBatch">{{detailBatch.batch_no}}</span></h2>
+            <div v-if="detailBatch">
+              <div class="note">切片 <span class="mono">{{detailBatch.slice_no}}</span> · 业务日 {{detailBatch.biz_date}} · {{detailBatch.caliber}}口径 · 操作人 {{detailBatch.operator}}</div>
+              <div style="margin:6px 0 10px">
+                <span class="tag" :class="{bad:detailBatch.status!=='全部成功',warn:detailBatch.status==='部分成功'}">{{detailBatch.status}}</span>
+                <span class="note"> 成功 {{detailBatch.success_count}} / 失败 {{detailBatch.fail_count}}</span>
+              </div>
+              <table><thead><tr><th>消费方</th><th>结果</th><th>水位</th><th>说明</th></tr></thead>
+              <tbody><tr v-for="it in detailItems" :key="'d'+it.id">
+                <td>{{it.consumer_name||it.consumer}}<br/><span class="mono note">{{it.consumer}}</span></td>
+                <td><span class="tag" :class="{bad:it.status!=='成功',warn:it.status==='回滚'||it.status==='拒绝'}">{{it.status}}</span></td>
+                <td class="mono">{{it.watermark_biz_date?it.watermark_biz_date+'T23:59:59':'-'}}</td>
+                <td class="note">{{it.note}}</td>
+              </tr></tbody></table>
+            </div>
+            <div v-else class="note">尚无提交记录</div>
+          </div>
+          <div class="panel">
+            <h2>放行侧栏</h2>
+            <div class="list">
+              <table><thead><tr><th>提交簿</th><th>切片</th><th>口径</th><th>状态</th><th>成/败</th></tr></thead>
+              <tbody><tr v-for="b in batches" :key="'b'+b.id" @click="showBatch(b.batch_no)" style="cursor:pointer">
+                <td class="mono">{{b.batch_no}}</td><td class="mono">{{b.slice_no}}</td><td>{{b.caliber}}</td>
+                <td><span class="tag" :class="{bad:b.status!=='全部成功',warn:b.status==='部分成功'}">{{b.status}}</span></td>
+                <td class="mono">{{b.success_count}}/{{b.fail_count}}</td>
+              </tr></tbody></table>
+            </div>
+          </div>
         </div>
       </div>
-      <div v-show="tab===3" class="panel">
-        <h2>消费水位</h2>
-        <table><thead><tr><th>消费方</th><th>业务日</th><th>水位</th><th>来源切片</th></tr></thead>
-        <tbody><tr v-for="w in watermarks" :key="w.id"><td>{{w.consumer}}</td><td>{{w.biz_date}}</td><td class="mono">{{w.watermark}}</td><td class="mono">{{w.source_slice}}</td></tr></tbody></table>
+
+      <div v-show="tab===3" class="grid">
+        <div class="panel">
+          <h2>各消费方最新水位（与目录逐行对应）</h2>
+          <table><thead><tr><th>消费方</th><th>状态</th><th>业务日</th><th>水位</th><th>来源切片</th><th>口径</th></tr></thead>
+          <tbody><tr v-for="w in wmSummary" :key="'s'+w.code">
+            <td>{{w.name}}<br/><span class="mono note">{{w.code}}</span></td>
+            <td><span class="tag" :class="{bad:w.status!=='启用'}">{{w.status}}</span></td>
+            <td>{{w.biz_date||'-'}}</td>
+            <td class="mono">{{w.latest_watermark||'未推进'}}</td>
+            <td class="mono">{{w.source_slice||'-'}}</td>
+            <td>{{w.caliber||'-'}}</td>
+          </tr></tbody></table>
+        </div>
+        <div class="panel">
+          <h2>水位流水（逐方独立，禁止共享一条）</h2>
+          <div class="list">
+            <table><thead><tr><th>消费方</th><th>水位</th><th>来源</th><th>提交簿</th></tr></thead>
+            <tbody><tr v-for="w in watermarks" :key="'w'+w.id">
+              <td>{{w.consumer_label||w.consumer}}</td>
+              <td class="mono">{{w.watermark}}<span class="note" v-if="!w.is_latest">（历史）</span></td>
+              <td class="mono">{{w.source_slice}}</td>
+              <td class="mono note">{{w.batch_no||'-'}}<br/>{{w.caliber||''}}</td>
+            </tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab===4" class="grid">
+        <div class="panel">
+          <h2>多消费提交簿（口径选定与放行批次）</h2>
+          <div class="note" style="margin-bottom:8px">口径按业务日写死，当日改口一律拒绝并记“多消费口径偏了”。</div>
+          <div class="list">
+            <table><thead><tr><th>提交簿</th><th>业务日</th><th>切片</th><th>口径</th><th>状态</th><th>操作人</th></tr></thead>
+            <tbody><tr v-for="b in batches" :key="'mb'+b.id" @click="showBatch(b.batch_no)" style="cursor:pointer">
+              <td class="mono">{{b.batch_no}}</td><td>{{b.biz_date}}</td><td class="mono">{{b.slice_no}}</td>
+              <td>{{b.caliber}}</td>
+              <td><span class="tag" :class="{bad:b.status!=='全部成功',warn:b.status==='部分成功'}">{{b.status}}</span></td>
+              <td>{{b.operator}}</td>
+            </tr></tbody></table>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>拒绝与争用留痕</h2>
+          <div class="list">
+            <table><thead><tr><th>类型</th><th>切片</th><th>详情</th><th>时间</th></tr></thead>
+            <tbody><tr v-for="i in incidents" :key="'i'+i.id">
+              <td><span class="tag" :class="{bad:i.kind==='多消费口径偏了',warn:i.kind==='多消费争用'}">{{i.kind}}</span><br/><span class="note">{{i.operator}}</span></td>
+              <td class="mono">{{i.slice_no||'-'}}</td>
+              <td class="note">{{i.detail}}<br/><span class="mono">{{i.batch_no}}</span></td>
+              <td class="mono note">{{i.created_at}}</td>
+            </tr></tbody></table>
+          </div>
+          <div v-if="!incidents.length" class="note">暂无留痕</div>
+        </div>
       </div>
     </main>
   </div>`
